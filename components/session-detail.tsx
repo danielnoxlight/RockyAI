@@ -143,7 +143,7 @@ function Ground({ x1, x2, y }: { x1: number; x2: number; y: number }) {
 
 function BenchPressIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Лёжа на скамье — опустить к груди — выжать вверх">
+    <IllustrationWrapper label="Lying on bench — Lower to chest — Press up">
       {/* Frame 1: bar lowered to chest */}
       <g className="text-foreground">
         {/* bench */}
@@ -176,7 +176,7 @@ function BenchPressIllustration({ className }: IllustrationProps) {
 
 function SquatIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Ноги на ширине плеч — присесть до параллели — встать">
+    <IllustrationWrapper label="Feet shoulder-width apart — Squat to parallel — Stand up">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: standing */}
       <StickFigure cx={28} cy={45} leftArm={[-10, 8]} rightArm={[10, 8]} leftLeg={[-8, 20]} rightLeg={[8, 20]} color="currentColor" />
@@ -192,7 +192,7 @@ function SquatIllustration({ className }: IllustrationProps) {
 
 function DeadliftIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Тазобедренн��й шарнир — тянуть вдоль ног — полное выпрямление">
+    <IllustrationWrapper label="Hip hinge — Pull along legs — Full lockout">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: hinged over bar */}
       <g className="text-foreground">
@@ -217,7 +217,7 @@ function DeadliftIllustration({ className }: IllustrationProps) {
 
 function PullUpIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Вис на перекладине — тянуть грудью к перекладине — медленно опустить">
+    <IllustrationWrapper label="Hanging on bar — Pull chest to bar — Lower slowly">
       {/* Bar */}
       <line x1="12" y1="10" x2="48" y2="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
       {/* Frame 1: hanging */}
@@ -235,7 +235,7 @@ function PullUpIllustration({ className }: IllustrationProps) {
 
 function OverheadPressIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Гриф у плеч — жать строго вверх — опустить под контролем">
+    <IllustrationWrapper label="Bar at shoulders — Press straight up — Lower with control">
       <Ground x1={4} x2={52} y={72} />
       {/* Frame 1: bar at shoulders */}
       <g className="text-foreground">
@@ -259,7 +259,7 @@ function OverheadPressIllustration({ className }: IllustrationProps) {
 
 function PlankIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Упор лёжа — тело прямое — держать позицию">
+    <IllustrationWrapper label="Forearm plank — Body straight — Hold position">
       <Ground x1={4} x2={116} y={60} />
       {/* Body flat, head right */}
       <circle cx="100" cy="44" r="5" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity={0.15} />
@@ -274,7 +274,7 @@ function PlankIllustration({ className }: IllustrationProps) {
 
 function HipThrustIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Плечи на скамье — поднять бёдра до параллели — сжать ягодицы">
+    <IllustrationWrapper label="Shoulders on bench — Raise hips to parallel — Squeeze glutes">
       <Ground x1={4} x2={116} y={70} />
       {/* bench */}
       <rect x="4" y="46" width="26" height="8" rx="2" fill="currentColor" fillOpacity={0.1} stroke="currentColor" strokeWidth="1.5" />
@@ -301,7 +301,7 @@ function HipThrustIllustration({ className }: IllustrationProps) {
 
 function LateralRaiseIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Руки опущены — поднять до уровня плеч — медленно опустить">
+    <IllustrationWrapper label="Arms down — Raise to shoulder height — Lower slowly">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: arms down */}
       <StickFigure cx={28} cy={44} leftArm={[-8, 16]} rightArm={[8, 16]} leftLeg={[-9, 22]} rightLeg={[9, 22]} color="currentColor" />
@@ -317,7 +317,7 @@ function LateralRaiseIllustration({ className }: IllustrationProps) {
 
 function LungeIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Шаг вперёд — опустить заднее колено к полу — оттолкнут����ся">
+    <IllustrationWrapper label="Step forward — Lower back knee to floor — Push back">
       <Ground x1={4} x2={52} y={70} />
       <StickFigure cx={28} cy={44} leftArm={[-8, 12]} rightArm={[8, 12]} leftLeg={[-9, 22]} rightLeg={[9, 22]} color="currentColor" />
       <Arrow x={60} y={40} />
@@ -355,7 +355,7 @@ function JumpingJacksIllustration({ className }: IllustrationProps) {
 
 function StretchIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Принять позу — дышать и удерживать растяжку">
+    <IllustrationWrapper label="Assume position — Breathe and hold stretch">
       <Ground x1={4} x2={116} y={70} />
       {/* sitting stretch figure */}
       <circle cx="30" cy="38" r="5" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity={0.15} />
@@ -379,7 +379,7 @@ function StretchIllustration({ className }: IllustrationProps) {
 
 function CurlIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Локти у корпуса — согнуть до плеча — медленно опустить">
+    <IllustrationWrapper label="Elbows at sides — Curl to shoulder — Lower slowly">
       <Ground x1={4} x2={52} y={70} />
       <StickFigure cx={28} cy={44} leftArm={[-8, 16]} rightArm={[8, 16]} leftLeg={[-9, 22]} rightLeg={[9, 22]} color="currentColor" />
       <Arrow x={60} y={40} />
@@ -393,7 +393,7 @@ function CurlIllustration({ className }: IllustrationProps) {
 
 function RowIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Наклон вперёд — тянуть к поясу — сжать лопатки">
+    <IllustrationWrapper label="Bend forward — Pull to waist — Squeeze shoulder blades">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: arms extended down */}
       <g className="text-foreground">
@@ -421,7 +421,7 @@ function RowIllustration({ className }: IllustrationProps) {
 
 function TreadmillIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Чередовать 1 мин бег / 1 мин ходьба">
+    <IllustrationWrapper label="Alternate 1 min run / 1 min walk">
       <Ground x1={4} x2={52} y={70} />
       {/* Running figure */}
       <StickFigure cx={28} cy={42} leftArm={[-14, 8]} rightArm={[10, 14]} leftLeg={[-12, 24]} rightLeg={[10, 20]} color="currentColor" />
@@ -437,7 +437,7 @@ function TreadmillIllustration({ className }: IllustrationProps) {
 
 function KettlebellSwingIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Тазобедренный шарнир — мах гирей до плеч — вернуть">
+    <IllustrationWrapper label="Hip hinge — Swing kettlebell to shoulder height — Return">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: hinge back */}
       <g className="text-foreground">
@@ -613,7 +613,7 @@ function MuscleBodyMap({ exercises }: { exercises: Exercise[] }) {
   )
 }
 
-// ─── Per-exercise set tracker ─────────────────────────────────────────────────
+// ─── Per-exercise set tracker ──────────────────────────────���──────────────────
 
 // Per-set feedback stored as array indexed by set number
 export type SetFeedback = {
@@ -977,7 +977,7 @@ function ExerciseSetTracker({
   )
 }
 
-// ─── Phase section ──────���─────────────────────────────────────────────��───────
+// ─── Phase section ──────���────────────���────────────────────────────────��───────
 
 function PhaseSection({
   phase,
@@ -1334,7 +1334,7 @@ export function SessionDetail({
       )}
 
       {/* Phase-grouped exercise list */}
-      <div className="flex-1 overflow-y-auto flex flex-col gap-4 pb-2">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-4 pb-6">
         {phaseGroupsWithOffsets.map(g => (
           <PhaseSection
             key={g.phase}
@@ -1373,7 +1373,7 @@ export function SessionDetail({
       </div>
 
       {/* Actions */}
-      <div className="pt-4 border-t border-border mt-4">
+      <div className="pt-3 border-t border-border mt-2">
         <Button
           onClick={handleComplete}
           disabled={isPending}
