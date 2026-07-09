@@ -372,25 +372,6 @@ const en = {
     },
     setRow:           (si: number, reps: string) => `Set ${si + 1} — ${reps} reps`,
     restRow:          (s: number) => `rest ${s}s`,
-    // Illustration step labels
-    illustrationSteps: {
-      benchPress:      ['Lying on bench', 'Lower to chest', 'Press up'],
-      squat:           ['Feet shoulder-width', 'Squat down', 'Drive up'],
-      deadlift:        ['Hinge at hips', 'Pull to hips', 'Lower with control'],
-      pullUp:          ['Dead hang', 'Pull chest to bar', 'Lower slowly'],
-      overheadPress:   ['Bar at shoulders', 'Press overhead', 'Lower to start'],
-      plank:           ['Hold plank position', 'Brace core', 'breathe steadily'],
-      hipThrust:       ['Shoulders on bench', 'Drive hips up', 'Squeeze glutes'],
-      lateralRaise:    ['Arms at sides', 'Raise to shoulder height', 'Lower slowly'],
-      lunge:           ['Step forward', 'Lower back knee', 'Push back up'],
-      jumpingJacks:    ['Feet together', 'Jump out — raise arms', 'Return'],
-      curl:            ['Elbows at sides', 'Curl to shoulder', 'Lower slowly'],
-      row:             ['Hinge forward', 'Pull to waist', 'Squeeze shoulder blades'],
-      treadmill:       ['Alternate 1 min run', '1 min walk'],
-      kettlebellSwing: ['Hip hinge back', 'Swing bell to shoulders', 'Return'],
-      stretch:         ['Take position', 'Breathe and hold stretch'],
-      generic:         ['Start position', 'Execute movement', 'Return to start'],
-    },
   },
 
   // Plan constructor
@@ -779,25 +760,6 @@ const ru: Dict = {
     },
     setRow:           (si: number, reps: string) => `Подход ${si + 1} — ${reps} повт`,
     restRow:          (s: number) => `отдых ${s}с`,
-    // Illustration step labels
-    illustrationSteps: {
-      benchPress:      ['Лёжа на скамье', 'Опустить к груди', 'Выжать вверх'],
-      squat:           ['Ноги на ширине плеч', 'Присесть', 'Встать'],
-      deadlift:        ['Тазобедренный шарнир', 'Тянуть к бёдрам', 'Медленно опустить'],
-      pullUp:          ['Вис на перекладине', 'Подтянуть грудь к перекладине', 'Медленно опустить'],
-      overheadPress:   ['Штанга у плеч', 'Выжать вверх', 'Вернуть'],
-      plank:           ['Принять планку', 'Напрячь корпус', 'Дышать ровно'],
-      hipThrust:       ['Плечи на скамье', 'Поднять бёдра', 'Сжать ягодицы'],
-      lateralRaise:    ['Руки вдоль тела', 'Поднять до уровня плеч', 'Медленно опустить'],
-      lunge:           ['Шаг вперёд', 'Опустить заднее колено', 'Оттолкнуться'],
-      jumpingJacks:    ['Ноги вместе', 'Прыжок врозь с подъёмом рук', 'Вернуться'],
-      curl:            ['Локти у корпуса', 'Согнуть до плеча', 'Медленно опустить'],
-      row:             ['Наклон вперёд', 'Тянуть к поясу', 'Сжать лопатки'],
-      treadmill:       ['Чередовать 1 мин бег', '1 мин ходьба'],
-      kettlebellSwing: ['Тазобедренный шарнир', 'Мах гирей до плеч', 'Вернуть'],
-      stretch:         ['Принять позу', 'Дышать и удерживать растяжку'],
-      generic:         ['Исходное положение', 'Выполнить движение', 'Вернуться'],
-    },
   },
 
   // Plan constructor

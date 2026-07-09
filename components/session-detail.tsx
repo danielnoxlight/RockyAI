@@ -70,7 +70,7 @@ type PhaseKey = keyof typeof PHASE_STYLE
 // Each illustration shows key movement phases as a 2-frame SVG stick figure.
 // viewBox: 0 0 120 80, figures are ~20px tall.
 
-type IllustrationProps = { className?: string; steps: string[] }
+type IllustrationProps = { className?: string }
 
 // Reusable stick-figure primitives
 function StickFigure({
@@ -101,8 +101,9 @@ function StickFigure({
   )
 }
 
-function IllustrationWrapper({ children, steps }: { children: React.ReactNode; steps: string[] }) {
-  const label = steps.join(' — ')
+function IllustrationWrapper({ children, label }: { children: React.ReactNode; label: string }) {
+  // Split label into steps on " — " for cleaner display
+  const steps = label.split(' — ')
   return (
     <div className="flex flex-col items-center gap-2">
       <svg viewBox="0 0 120 80" className="w-full h-[72px]" aria-label={label} role="img">
@@ -140,9 +141,9 @@ function Ground({ x1, x2, y }: { x1: number; x2: number; y: number }) {
 
 // ── Individual exercise illustrations ──
 
-function BenchPressIllustration({ steps }: IllustrationProps) {
+function BenchPressIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Лёжа на скамье — опустить к груди — выжать вверх">
       {/* Frame 1: bar lowered to chest */}
       <g className="text-foreground">
         {/* bench */}
@@ -173,9 +174,9 @@ function BenchPressIllustration({ steps }: IllustrationProps) {
   )
 }
 
-function SquatIllustration({ steps }: IllustrationProps) {
+function SquatIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Ноги на ширине плеч — присесть до параллели — встать">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: standing */}
       <StickFigure cx={28} cy={45} leftArm={[-10, 8]} rightArm={[10, 8]} leftLeg={[-8, 20]} rightLeg={[8, 20]} color="currentColor" />
@@ -189,9 +190,9 @@ function SquatIllustration({ steps }: IllustrationProps) {
   )
 }
 
-function DeadliftIllustration({ steps }: IllustrationProps) {
+function DeadliftIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Тазобедренн��й шарнир — тянуть вдоль ног — полное выпрямление">
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: hinged over bar */}
       <g className="text-foreground">
@@ -214,9 +215,9 @@ function DeadliftIllustration({ steps }: IllustrationProps) {
   )
 }
 
-function PullUpIllustration({ steps }: IllustrationProps) {
+function PullUpIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Вис на перекладине — тянуть грудью к перекладине — медленно опустить">
       {/* Bar */}
       <line x1="12" y1="10" x2="48" y2="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
       {/* Frame 1: hanging */}
@@ -232,9 +233,9 @@ function PullUpIllustration({ steps }: IllustrationProps) {
   )
 }
 
-function OverheadPressIllustration({ steps }: IllustrationProps) {
+function OverheadPressIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Гриф у плеч — жать строго вверх — опустить под контролем">
       <Ground x1={4} x2={52} y={72} />
       {/* Frame 1: bar at shoulders */}
       <g className="text-foreground">
@@ -256,9 +257,9 @@ function OverheadPressIllustration({ steps }: IllustrationProps) {
   )
 }
 
-function PlankIllustration({ steps }: IllustrationProps) {
+function PlankIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper steps={steps}>
+    <IllustrationWrapper label="Упор лёжа — тело прямое — держать позицию">
       <Ground x1={4} x2={116} y={60} />
       {/* Body flat, head right */}
       <circle cx="100" cy="44" r="5" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity={0.15} />
@@ -340,7 +341,7 @@ function LungeIllustration({ className }: IllustrationProps) {
 
 function JumpingJacksIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Ноги вместе — прыжок врозь с подъёмом рук — вернуться">
+    <IllustrationWrapper label="Feet together — Jump apart with arms raised — Return">
       <Ground x1={4} x2={52} y={70} />
       <StickFigure cx={28} cy={44} leftArm={[-8, 14]} rightArm={[8, 14]} leftLeg={[-5, 22]} rightLeg={[5, 22]} color="currentColor" />
       <Arrow x={60} y={40} />
