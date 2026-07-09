@@ -1278,7 +1278,7 @@ export function SessionDetail({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -1334,7 +1334,7 @@ export function SessionDetail({
       )}
 
       {/* Phase-grouped exercise list */}
-      <div className="flex-1 overflow-y-auto flex flex-col gap-4 pb-6">
+      <div className="flex flex-col gap-4 pb-4">
         {phaseGroupsWithOffsets.map(g => (
           <PhaseSection
             key={g.phase}
@@ -1373,7 +1373,7 @@ export function SessionDetail({
       </div>
 
       {/* Actions */}
-      <div className="pt-3 border-t border-border mt-2">
+      <div className="pt-3 border-t border-border mt-2 mb-2">
         <Button
           onClick={handleComplete}
           disabled={isPending}
