@@ -10,13 +10,27 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'FitAI — Тренировки с AI',
-  description: 'Персональные планы тренировок на основе AI с календарём, прогрессом и визуализацией упражнений.',
+  title: 'RockyAI — AI-Powered Fitness',
+  description: 'Personalized AI workout plans with calendar, progress tracking, exercise visualization, and Rocky — your personal AI coach.',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
+  openGraph: {
+    title: 'RockyAI — AI-Powered Fitness',
+    description: 'Personalized AI workout plans with calendar, progress tracking, exercise visualization, and Rocky — your personal AI coach.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'RockyAI — AI-Powered Fitness',
+    description: 'Personalized AI workout plans with calendar, progress tracking, exercise visualization, and Rocky — your personal AI coach.',
+  },
 }
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#6366f1',
+  themeColor: '#0d1b2a',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,

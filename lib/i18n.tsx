@@ -15,7 +15,7 @@ const en = {
   nav: {
     home:     'Home',
     calendar: 'Calendar',
-    coach:    'Coach',
+    coach:    'Rocky',
     progress: 'Progress',
     profile:  'Profile',
   },
@@ -179,20 +179,20 @@ const en = {
     langRu:     'Russian',
   },
 
-  // Coach chat
+  // Rocky chat
   coach: {
-    title:         'AI Coach',
-    defaultTitle:  'AI Coach',
-    emptyTitle:    'Your Personal Coach',
-    emptyDesc:     'Chat, edit, or completely rebuild your training plan — your coach will handle any change.',
-    noPlanWarning: 'You have no active plan yet. Create one in the generator so the coach can edit it.',
+    title:         'Rocky',
+    defaultTitle:  'Rocky',
+    emptyTitle:    'Meet Rocky, Your AI Coach',
+    emptyDesc:     'Chat, edit, or completely rebuild your training plan — Rocky will handle any change.',
+    noPlanWarning: 'You have no active plan yet. Create one in the generator so Rocky can edit it.',
     noPlan:        'No plan attached',
     noPlanSub:     'General fitness questions',
     pickPlan:      'Choose training plan',
-    inputPlaceholder: 'Message your coach...',
+    inputPlaceholder: 'Message Rocky...',
     sendBtn:       'Send',
     nowLabel:      'now',
-    chatsTitle:    'Coach chats',
+    chatsTitle:    'Rocky chats',
     newChat:       'New chat',
     noChats:       'No chats — start your first!',
     closeChat:     'Close',
@@ -431,7 +431,7 @@ const ru: Dict = {
   nav: {
     home:     'Главная',
     calendar: 'Календарь',
-    coach:    'Тренер',
+    coach:    'Rocky',
     progress: 'Прогресс',
     profile:  'Профиль',
   },
@@ -582,18 +582,18 @@ const ru: Dict = {
   },
 
   coach: {
-    title:         'AI Тренер',
-    defaultTitle:  'AI Тренер',
-    emptyTitle:    'Твой личный тренер',
-    emptyDesc:     'Общайся, редактируй или полностью переделывай план тренировок — тренер выполнит любое изменение.',
-    noPlanWarning: 'У тебя пока нет активного плана. Создай его в генераторе, чтобы тренер мог его редактировать.',
+    title:         'Rocky',
+    defaultTitle:  'Rocky',
+    emptyTitle:    'Познакомься с Rocky, твоим AI тренером',
+    emptyDesc:     'Общайся, редактируй или полностью переделывай план тренировок — Rocky выполнит любое изменение.',
+    noPlanWarning: 'У тебя пока нет активного плана. Создай его в генераторе, чтобы Rocky мог его редактировать.',
     noPlan:        'Без привязки к плану',
     noPlanSub:     'Общие вопросы о тренировках',
     pickPlan:      'Выбрать план тренировок',
-    inputPlaceholder: 'Напиши тренеру...',
+    inputPlaceholder: 'Напиши Rocky...',
     sendBtn:       'Отправить',
     nowLabel:      'сейчас',
-    chatsTitle:    'Чаты с тренером',
+    chatsTitle:    'Чаты с Rocky',
     newChat:       'Новый чат',
     noChats:       'Нет чатов — создай первый!',
     closeChat:     'Закрыть',
@@ -811,7 +811,7 @@ const ru: Dict = {
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 
-const STORAGE_KEY = 'fitai_lang'
+const STORAGE_KEY = 'rockyai_lang'
 
 type LangContextValue = {
   lang: Lang

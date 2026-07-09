@@ -7,7 +7,7 @@ import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dumbbell } from 'lucide-react'
+
 import { useTranslation } from '@/lib/i18n'
 
 export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
@@ -46,10 +46,10 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center mb-4">
-            <Dumbbell className="w-7 h-7 text-primary" />
+          <div className="w-14 h-14 rounded-2xl overflow-hidden mb-4">
+            <img src="/logo.png" alt="RockyAI" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">FitAI</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">RockyAI</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {isSignUp ? t.auth.signUp : t.auth.signIn}
           </p>
