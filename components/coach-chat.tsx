@@ -269,7 +269,7 @@ export type CoachChatProps = {
 }
 
 export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThreads, initialThreadId, initialHistory }: CoachChatProps) {
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const co = t.coach
   const router = useRouter()
   const [input, setInput] = useState('')
