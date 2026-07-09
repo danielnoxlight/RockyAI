@@ -335,7 +335,7 @@ export function CalendarView({
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSelectedSession(null)}
           />
-          <div className="relative z-10 w-full max-w-lg mx-auto bg-card border-t border-border rounded-t-3xl px-4 pt-5 max-h-[90svh] overflow-y-auto" style={{ paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))' }}>
+          <div className="relative z-10 w-full max-w-lg mx-auto bg-card border-t border-border rounded-t-3xl px-4 pt-5 max-h-[90svh] overflow-y-auto" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
             <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
             <SessionDetail
               session={selectedSession}

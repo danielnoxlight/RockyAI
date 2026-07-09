@@ -655,7 +655,7 @@ export function GeneratePlanForm({ onClose, userProfile }: { onClose?: () => voi
       </div>
 
       {/* Footer */}
-      <div className="flex gap-3 mt-6 pt-4 pb-2 border-t border-border">
+      <div className="flex gap-3 mt-6 pt-4 pb-6 border-t border-border">
         {step > 1 && (
           <Button
             variant="outline"
