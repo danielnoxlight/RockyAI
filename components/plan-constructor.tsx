@@ -30,11 +30,27 @@ type BuilderExercise = Exercise & { included: boolean }
 type BuilderDay = { dayName: string; focus: string; exercises: BuilderExercise[] }
 
 const PHASE_ORDER: Exercise['phase'][] = ['warmup', 'strength', 'cardio', 'cooldown']
-const PHASE_META: Record<Exercise['phase'], { label: string; icon: typeof Flame; color: string }> = {
-  warmup:   { label: 'Разминка',    icon: Flame,    color: 'text-orange-400' },
-  strength: { label: 'Силовой блок', icon: Dumbbell, color: 'text-blue-400' },
-  cardio:   { label: 'Кардио',       icon: Zap,      color: 'text-cyan-400' },
-  cooldown: { label: 'Заминка',      icon: Leaf,     color: 'text-green-400' },
+const PHASE_ICONS: Record<Exercise['phase'], typeof Flame> = {
+  warmup:   Flame,
+  strength: Dumbbell,
+  cardio:   Zap,
+  cooldown: Leaf,
+}
+const PHASE_COLORS: Record<Exercise['phase'], string> = {
+  warmup:   'text-orange-400',
+  strength: 'text-blue-400',
+  cardio:   'text-cyan-400',
+  cooldown: 'text-green-400',
+}
+function getPhaseMeta(
+  phaseLabels: Record<string, string>,
+): Record<Exercise['phase'], { label: string; icon: typeof Flame; color: string }> {
+  return {
+    warmup:   { label: phaseLabels.warmup,   icon: PHASE_ICONS.warmup,   color: PHASE_COLORS.warmup },
+    strength: { label: phaseLabels.strength, icon: PHASE_ICONS.strength, color: PHASE_COLORS.strength },
+    cardio:   { label: phaseLabels.cardio,   icon: PHASE_ICONS.cardio,   color: PHASE_COLORS.cardio },
+    cooldown: { label: phaseLabels.cooldown, icon: PHASE_ICONS.cooldown, color: PHASE_COLORS.cooldown },
+  }
 }
 
 // ─── Add Exercise Panel ───────────────────────────────────────────────────────
@@ -75,7 +91,9 @@ function AddExercisePanel({
   initialDayIdx?: number
   onDaySelected?: (idx: number) => void
 }) {
-  const { lang } = useTranslation()
+  const { t, lang } = useTranslation()
+  const c = t.constructor
+  const PHASE_META = getPhaseMeta(c.phaseLabels)
   // Start at 'day' step only when launched globally (allDays provided, no dayFocus yet)
   const [mode, setMode] = useState<AddMode>(allDays && initialDayIdx === undefined ? 'day' : 'pick')
   const [aiPrompt, setAiPrompt] = useState('')
@@ -190,11 +208,11 @@ function AddExercisePanel({
                   {i + 1}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">Тренировка {i + 1}</p>
+                  <p className="text-sm font-semibold text-foreground truncate">{c.workoutTitle} {i + 1}</p>
                   <p className="text-xs text-muted-foreground truncate">{d.focus}</p>
                 </div>
                 <span className="ml-auto text-xs text-muted-foreground flex-shrink-0">
-                  {d.exercises.filter(e => e.included).length} упр.
+                  {d.exercises.filter(e => e.included).length} {c.exercisesShort}
                 </span>
               </button>
             ))}
@@ -207,7 +225,7 @@ function AddExercisePanel({
         <div className="p-4 flex flex-col gap-3">
           {allDays && (
             <p className="text-xs text-muted-foreground -mb-1">
-              Тренировка: <span className="font-semibold text-foreground">{dayFocus}</span>
+              {c.workout} <span className="font-semibold text-foreground">{dayFocus}</span>
             </p>
           )}
           <button
@@ -219,8 +237,8 @@ function AddExercisePanel({
               <Sparkles className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">Сгенерировать через AI</p>
-              <p className="text-xs text-muted-foreground">Опишите что хотите — Groq подберет упражнение</p>
+              <p className="text-sm font-semibold text-foreground">{c.generateAI}</p>
+              <p className="text-xs text-muted-foreground">{c.generateAIDesc}</p>
             </div>
           </button>
           <button
@@ -232,8 +250,8 @@ function AddExercisePanel({
               <Pencil className="w-4 h-4 text-muted-foreground" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">Добавить вручную</p>
-              <p className="text-xs text-muted-foreground">Введите название, подходы и повторения самостоятельно</p>
+              <p className="text-sm font-semibold text-foreground">{c.addManual}</p>
+              <p className="text-xs text-muted-foreground">{c.addManualDesc}</p>
             </div>
           </button>
           {allDays && (
@@ -242,7 +260,7 @@ function AddExercisePanel({
               onClick={() => setMode('day')}
               className="text-xs text-muted-foreground hover:text-foreground text-center py-1 transition-colors"
             >
-              Изменить тренировку
+              {c.changeWorkout}
             </button>
           )}
         </div>
@@ -256,7 +274,7 @@ function AddExercisePanel({
               {/* Phase selector */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  Тип тренировки
+                  {c.phaseType}
                 </label>
                 <div className="grid grid-cols-2 gap-1.5">
                   {PHASE_ORDER.map(p => {
@@ -282,7 +300,7 @@ function AddExercisePanel({
               </div>
 
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Опишите упражнение
+                {c.describeExercise}
               </label>
               <textarea
                 ref={promptRef}
@@ -294,7 +312,7 @@ function AddExercisePanel({
                     generateAI(aiPrompt)
                   }
                 }}
-                placeholder="Например: упражнение на ягодицы без инвентаря, или: кардио на 30 секунд, или: разминка для плеч..."
+                placeholder={c.describePlaceholder}
                 rows={3}
                 className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
               />
@@ -307,7 +325,7 @@ function AddExercisePanel({
                   onClick={() => setMode('pick')}
                   className="flex-1 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:bg-secondary transition-colors"
                 >
-                  Назад
+                  {c.back}
                 </button>
                 <button
                   type="button"
@@ -321,12 +339,12 @@ function AddExercisePanel({
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Генерирую...
+                      {c.generating}
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />
-                      Сгенерировать
+                      {c.generate}
                     </>
                   )}
                 </button>
@@ -351,8 +369,8 @@ function AddExercisePanel({
                   </span>
                 </div>
                 <div className="flex gap-3 text-xs font-medium">
-                  <span className="text-foreground">{aiPreview.sets} подх. × {aiPreview.reps}</span>
-                  <span className="text-muted-foreground">Отдых {aiPreview.restSeconds}с</span>
+                  <span className="text-foreground">{c.setsReps(aiPreview.sets, aiPreview.reps)}</span>
+                  <span className="text-muted-foreground">{c.rest(aiPreview.restSeconds)}</span>
                 </div>
                 {aiPreview.description && (
                   <p className="text-xs text-muted-foreground leading-relaxed">{aiPreview.description}</p>
@@ -366,7 +384,7 @@ function AddExercisePanel({
                   className="flex-1 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:bg-secondary flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  Перегенерировать
+                  {c.regenerate}
                 </button>
                 <button
                   type="button"
@@ -374,7 +392,7 @@ function AddExercisePanel({
                   className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-1.5 transition-opacity"
                 >
                   <Check className="w-4 h-4" />
-                  Добавить
+                  {c.add}
                 </button>
               </div>
             </>
@@ -386,20 +404,20 @@ function AddExercisePanel({
       {mode === 'manual' && (
         <div className="p-4 flex flex-col gap-3">
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            Название упражнения <span className="text-destructive">*</span>
+            {c.exerciseName} <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             value={manual.name}
             onChange={e => setManual(m => ({ ...m, name: e.target.value }))}
-            placeholder="Например: Приседания со штангой"
+            placeholder={c.exerciseNamePlaceholder}
             className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             autoFocus
           />
 
           <div className="grid grid-cols-3 gap-2">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-muted-foreground font-medium">Подходы</label>
+              <label className="text-xs text-muted-foreground font-medium">{c.sets}</label>
               <input
                 type="number"
                 min="1" max="10"
@@ -409,7 +427,7 @@ function AddExercisePanel({
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-muted-foreground font-medium">Повторения</label>
+              <label className="text-xs text-muted-foreground font-medium">{c.reps}</label>
               <input
                 type="text"
                 value={manual.reps}
@@ -419,7 +437,7 @@ function AddExercisePanel({
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-muted-foreground font-medium">Отдых (с)</label>
+              <label className="text-xs text-muted-foreground font-medium">{c.restSec}</label>
               <input
                 type="number"
                 min="0" max="300"
@@ -432,38 +450,38 @@ function AddExercisePanel({
 
           <div className="grid grid-cols-2 gap-2">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-muted-foreground font-medium">Группа мышц</label>
+              <label className="text-xs text-muted-foreground font-medium">{c.muscleGroup}</label>
               <input
                 type="text"
                 value={manual.muscleGroup}
                 onChange={e => setManual(m => ({ ...m, muscleGroup: e.target.value }))}
-                placeholder="Ноги, Спина..."
+                placeholder={c.muscleGroupPlaceholder}
                 className="w-full bg-secondary border border-border rounded-xl px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-muted-foreground font-medium">Инвентарь</label>
+              <label className="text-xs text-muted-foreground font-medium">{c.equipment}</label>
               <input
                 type="text"
                 value={manual.equipment}
                 onChange={e => setManual(m => ({ ...m, equipment: e.target.value }))}
-                placeholder="Гантели, Турник..."
+                placeholder={c.equipmentPlaceholder}
                 className="w-full bg-secondary border border-border rounded-xl px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-muted-foreground font-medium">Фаза тренировки</label>
+            <label className="text-xs text-muted-foreground font-medium">{c.phaseLabel}</label>
             <PhasePicker />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground font-medium">Описание техники (необязательно)</label>
+            <label className="text-xs text-muted-foreground font-medium">{c.descriptionLabel}</label>
             <textarea
               value={manual.description}
               onChange={e => setManual(m => ({ ...m, description: e.target.value }))}
-              placeholder="Краткое описание техники..."
+              placeholder={c.descriptionPlaceholder}
               rows={2}
               className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
@@ -475,7 +493,7 @@ function AddExercisePanel({
               onClick={() => setMode('pick')}
               className="flex-1 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:bg-secondary transition-colors"
             >
-              Назад
+              {c.back}
             </button>
             <button
               type="button"
@@ -484,7 +502,7 @@ function AddExercisePanel({
               className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-40 flex items-center justify-center gap-1.5 transition-opacity"
             >
               <Check className="w-4 h-4" />
-              Добавить
+              {c.add}
             </button>
           </div>
         </div>
@@ -502,6 +520,10 @@ export function PlanConstructor({
   days: WorkoutDay[]
   onChange: (days: WorkoutDay[]) => void
 }) {
+  const { t } = useTranslation()
+  const c = t.constructor
+  const PHASE_META = getPhaseMeta(c.phaseLabels)
+
   const initial = useMemo<BuilderDay[]>(
     () =>
       days.map(d => {
@@ -578,13 +600,13 @@ export function PlanConstructor({
             >
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-foreground truncate">
-                  Тренировка {dayIdx + 1}
+                  {c.workoutTitle} {dayIdx + 1}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">{day.focus}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  {includedCount} упр.
+                  {includedCount} {c.exercisesShort}
                 </span>
                 {open ? (
                   <ChevronUp className="w-4 h-4 text-muted-foreground" />
@@ -624,7 +646,7 @@ export function PlanConstructor({
                                 ? 'bg-primary border-primary text-primary-foreground'
                                 : 'border-border'
                             }`}
-                            aria-label={ex.included ? 'Убрать' : 'Добавить'}
+                            aria-label={ex.included ? c.exclude : c.include}
                           >
                             {ex.included && <Check className="w-3.5 h-3.5" />}
                           </button>
@@ -644,7 +666,7 @@ export function PlanConstructor({
                             type="button"
                             onClick={() => removeExercise(dayIdx, ex.name)}
                             className="w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors flex-shrink-0"
-                            aria-label="Удалить упражнение"
+                            aria-label={c.removeExercise}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -669,7 +691,7 @@ export function PlanConstructor({
                     className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-primary/40 text-primary text-sm font-medium hover:bg-primary/5 hover:border-primary/60 transition-all mt-1"
                   >
                     <Plus className="w-4 h-4" />
-                    Добавить упражнение
+                    {c.addExercise}
                   </button>
                 )}
               </div>
@@ -707,7 +729,7 @@ export function PlanConstructor({
           className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-2xl border-2 border-dashed border-primary/40 text-primary text-sm font-semibold hover:bg-primary/5 hover:border-primary/70 transition-all"
         >
           <Plus className="w-4 h-4" />
-          Добавить упражнение в тренировку
+          {c.addExercisePlan}
         </button>
       )}
     </div>
