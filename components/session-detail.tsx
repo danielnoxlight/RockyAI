@@ -70,7 +70,7 @@ type PhaseKey = keyof typeof PHASE_STYLE
 // Each illustration shows key movement phases as a 2-frame SVG stick figure.
 // viewBox: 0 0 120 80, figures are ~20px tall.
 
-type IllustrationProps = { className?: string }
+type IllustrationProps = { className?: string; steps: string[] }
 
 // Reusable stick-figure primitives
 function StickFigure({
@@ -101,9 +101,8 @@ function StickFigure({
   )
 }
 
-function IllustrationWrapper({ children, label }: { children: React.ReactNode; label: string }) {
-  // Split label into steps on " — " for cleaner display
-  const steps = label.split(' — ')
+function IllustrationWrapper({ children, steps }: { children: React.ReactNode; steps: string[] }) {
+  const label = steps.join(' — ')
   return (
     <div className="flex flex-col items-center gap-2">
       <svg viewBox="0 0 120 80" className="w-full h-[72px]" aria-label={label} role="img">
@@ -141,9 +140,9 @@ function Ground({ x1, x2, y }: { x1: number; x2: number; y: number }) {
 
 // ── Individual exercise illustrations ──
 
-function BenchPressIllustration({ className }: IllustrationProps) {
+function BenchPressIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Лёжа на скамье — опустить к груди — выжать вверх">
+    <IllustrationWrapper steps={steps}>
       {/* Frame 1: bar lowered to chest */}
       <g className="text-foreground">
         {/* bench */}
@@ -174,9 +173,9 @@ function BenchPressIllustration({ className }: IllustrationProps) {
   )
 }
 
-function SquatIllustration({ className }: IllustrationProps) {
+function SquatIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Ноги на ширине плеч — присесть до параллели — встать">
+    <IllustrationWrapper steps={steps}>
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: standing */}
       <StickFigure cx={28} cy={45} leftArm={[-10, 8]} rightArm={[10, 8]} leftLeg={[-8, 20]} rightLeg={[8, 20]} color="currentColor" />
@@ -190,9 +189,9 @@ function SquatIllustration({ className }: IllustrationProps) {
   )
 }
 
-function DeadliftIllustration({ className }: IllustrationProps) {
+function DeadliftIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Тазобедренн��й шарнир — тянуть вдоль ног — полное выпрямление">
+    <IllustrationWrapper steps={steps}>
       <Ground x1={4} x2={52} y={70} />
       {/* Frame 1: hinged over bar */}
       <g className="text-foreground">
@@ -215,9 +214,9 @@ function DeadliftIllustration({ className }: IllustrationProps) {
   )
 }
 
-function PullUpIllustration({ className }: IllustrationProps) {
+function PullUpIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Вис на перекладине — тянуть грудью к перекладине — медленно опустить">
+    <IllustrationWrapper steps={steps}>
       {/* Bar */}
       <line x1="12" y1="10" x2="48" y2="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
       {/* Frame 1: hanging */}
@@ -233,9 +232,9 @@ function PullUpIllustration({ className }: IllustrationProps) {
   )
 }
 
-function OverheadPressIllustration({ className }: IllustrationProps) {
+function OverheadPressIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Гриф у плеч — жать строго вверх — опустить под контролем">
+    <IllustrationWrapper steps={steps}>
       <Ground x1={4} x2={52} y={72} />
       {/* Frame 1: bar at shoulders */}
       <g className="text-foreground">
@@ -257,9 +256,9 @@ function OverheadPressIllustration({ className }: IllustrationProps) {
   )
 }
 
-function PlankIllustration({ className }: IllustrationProps) {
+function PlankIllustration({ steps }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Упор лёжа — тело прямое — держать позицию">
+    <IllustrationWrapper steps={steps}>
       <Ground x1={4} x2={116} y={60} />
       {/* Body flat, head right */}
       <circle cx="100" cy="44" r="5" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity={0.15} />
@@ -317,7 +316,7 @@ function LateralRaiseIllustration({ className }: IllustrationProps) {
 
 function LungeIllustration({ className }: IllustrationProps) {
   return (
-    <IllustrationWrapper label="Шаг вперёд — опустить заднее колено к полу — оттолкнут��ся">
+    <IllustrationWrapper label="Шаг вперёд — опустить заднее колено к полу — оттолкнут����ся">
       <Ground x1={4} x2={52} y={70} />
       <StickFigure cx={28} cy={44} leftArm={[-8, 12]} rightArm={[8, 12]} leftLeg={[-9, 22]} rightLeg={[9, 22]} color="currentColor" />
       <Arrow x={60} y={40} />
@@ -977,7 +976,7 @@ function ExerciseSetTracker({
   )
 }
 
-// ─── Phase section ────────────────────────────────────────────────────��───────
+// ─── Phase section ──────���─────────────────────────────────────────────��───────
 
 function PhaseSection({
   phase,
