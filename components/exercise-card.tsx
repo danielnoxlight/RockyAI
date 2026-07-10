@@ -1,4 +1,5 @@
 import { Dumbbell, Clock, Repeat, Weight } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 export type Exercise = {
   name: string
@@ -34,6 +35,7 @@ function getMuscleColor(muscle: string) {
 }
 
 export function ExerciseCard({ exercise, index }: { exercise: Exercise; index: number }) {
+  const { t } = useTranslation()
   const color = getMuscleColor(exercise.muscleGroup)
 
   return (
@@ -57,17 +59,17 @@ export function ExerciseCard({ exercise, index }: { exercise: Exercise; index: n
         <div className="bg-card rounded-xl p-2.5 flex flex-col items-center gap-1 border border-border">
           <Repeat className="w-3.5 h-3.5 text-primary" />
           <span className="text-base font-bold text-foreground leading-none">{exercise.sets}</span>
-          <span className="text-[10px] text-muted-foreground">подхода</span>
+          <span className="text-[10px] text-muted-foreground">{t.session.sets}</span>
         </div>
         <div className="bg-card rounded-xl p-2.5 flex flex-col items-center gap-1 border border-border">
           <Weight className="w-3.5 h-3.5 text-accent" />
           <span className="text-base font-bold text-foreground leading-none">{exercise.reps}</span>
-          <span className="text-[10px] text-muted-foreground">повторов</span>
+          <span className="text-[10px] text-muted-foreground">{t.session.reps}</span>
         </div>
         <div className="bg-card rounded-xl p-2.5 flex flex-col items-center gap-1 border border-border">
           <Clock className="w-3.5 h-3.5 text-yellow-400" />
-          <span className="text-base font-bold text-foreground leading-none">{exercise.restSeconds}с</span>
-          <span className="text-[10px] text-muted-foreground">отдых</span>
+          <span className="text-base font-bold text-foreground leading-none">{exercise.restSeconds}{t.session.seconds}</span>
+          <span className="text-[10px] text-muted-foreground">{t.session.rest}</span>
         </div>
       </div>
 
