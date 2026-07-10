@@ -86,7 +86,17 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="password" className="text-foreground text-sm font-medium">{t.auth.passwordLabel}</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-foreground text-sm font-medium">{t.auth.passwordLabel}</Label>
+                {!isSignUp && (
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-primary font-medium hover:underline underline-offset-4"
+                  >
+                    {t.auth.forgotLink}
+                  </Link>
+                )}
+              </div>
               <Input
                 id="password"
                 type="password"

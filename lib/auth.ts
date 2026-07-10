@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth'
 import { pool } from '@/lib/db'
+import { sendPasswordResetEmail } from '@/lib/email'
 
 export const auth = betterAuth({
   database: pool,
@@ -13,6 +14,15 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
+    // Token from the reset email is valid for 1 hour.
+    resetPasswordTokenExpiresIn: 60 * 60,
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({
+        to: user.email,
+        url,
+        userName: user.name,
+      })
+    },
   },
   trustedOrigins: [
     'http://localhost:3000',

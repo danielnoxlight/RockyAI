@@ -36,6 +36,24 @@ const en = {
     noAccount:        "Don't have an account? ",
     signInLink:       'Sign In',
     signUpLink:       'Sign Up',
+    forgotLink:       'Forgot password?',
+    // Forgot password page
+    forgotTitle:      'Forgot password',
+    forgotDesc:       'Enter your email and we\u2019ll send you a link to reset your password.',
+    sendResetBtn:     'Send reset link',
+    sending:          'Sending...',
+    resetSent:        'If an account exists for that email, we\u2019ve sent a reset link. Check your inbox.',
+    backToSignIn:     'Back to sign in',
+    // Reset password page
+    resetTitle:       'Set a new password',
+    resetDesc:        'Choose a new password for your account.',
+    newPasswordLabel: 'New password',
+    confirmPasswordLabel: 'Confirm password',
+    resetBtn:         'Reset password',
+    resetting:        'Resetting...',
+    resetSuccess:     'Your password has been reset. You can now sign in.',
+    passwordsNoMatch: 'Passwords do not match',
+    invalidToken:     'This reset link is invalid or has expired. Please request a new one.',
   },
 
   // Home page
@@ -451,6 +469,24 @@ const ru: Dict = {
     noAccount:        'Нет аккаунта? ',
     signInLink:       'Войти',
     signUpLink:       'Зарегистрироваться',
+    forgotLink:       'Забыли пароль?',
+    // Страница восстановления пароля
+    forgotTitle:      'Восстановление пароля',
+    forgotDesc:       'Введите email, и мы отправим ссылку для смены пароля.',
+    sendResetBtn:     'Отправить ссылку',
+    sending:          'Отправка...',
+    resetSent:        'Если аккаунт с таким email существует, мы отправили ссылку для сброса. Проверьте почту.',
+    backToSignIn:     'Вернуться ко входу',
+    // Страница смены пароля
+    resetTitle:       'Новый пароль',
+    resetDesc:        'Выберите новый пароль для вашего аккаунта.',
+    newPasswordLabel: 'Новый пароль',
+    confirmPasswordLabel: 'Повторите пароль',
+    resetBtn:         'Сменить пароль',
+    resetting:        'Сохранение...',
+    resetSuccess:     'Пароль изменён. Теперь вы можете войти.',
+    passwordsNoMatch: 'Пароли не совпадают',
+    invalidToken:     'Ссылка недействительна или устарела. Запросите новую.',
   },
 
   home: {
