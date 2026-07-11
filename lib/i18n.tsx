@@ -89,6 +89,11 @@ const en = {
     restDaySub:   'Recovery is part of training too',
     completed:    'Completed',
     scheduled:    'Scheduled',
+    missed:       'Missed',
+    missedSection:'Missed Workouts',
+    missedBanner: 'You have missed workouts. The next session has been boosted to help you catch up.',
+    boosted:      'Boosted',
+    catchUpDone:  'Plan adjusted',
     exercises:    (n: number) => `${n} exercise${n !== 1 ? 's' : ''}`,
     // Goal labels
     goals: {
@@ -113,6 +118,7 @@ const en = {
     planned:   'Planned',
     partial:   'Partial',
     done:      'Done',
+    missed:    'Missed',
     multiple:  'Multiple workouts',
     // Day drawer
     sessionsToday: 'Workouts for this day',
@@ -515,7 +521,12 @@ const ru: Dict = {
     restDay:      'Сегодня день отдыха',
     restDaySub:   'Восстановление — тоже часть тренировки',
     completed:    'Выполнено',
-    scheduled:    'Запланиро��ано',
+    scheduled:    'Запланировано',
+    missed:       'Пропущено',
+    missedSection:'Пропущенные тренировки',
+    missedBanner: 'Есть пропущенные тренировки. Следующая тренировка усилена, чтобы наверстать прогресс.',
+    boosted:      'Усилено',
+    catchUpDone:  'План скорректирован',
     exercises:    (n: number) => `${n} упражнений`,
     goals: {
       weight_loss:  'Похудение',
@@ -537,6 +548,7 @@ const ru: Dict = {
     planned:   'Запланировано',
     partial:   'Частично',
     done:      'Выполнено',
+    missed:    'Пропущено',
     multiple:  'Несколько тренировок',
     sessionsToday: 'Тренировки за этот день',
     exercises:     'упражнений',

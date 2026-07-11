@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useTransition } from 'react'
 import Link from 'next/link'
-import { getActivePlan, getSessionsForPlan, getProfile } from '@/app/actions/fitness'
+import { getActivePlan, getSessionsForPlan, getProfile, boostMissedSessions } from '@/app/actions/fitness'
 import { BottomNav } from '@/components/bottom-nav'
 import { GeneratePlanForm } from '@/components/generate-plan-form'
 import { ExerciseCard, Exercise } from '@/components/exercise-card'
-import { Sparkles, Dumbbell, CalendarCheck, Flame, ChevronRight, Plus, Trophy, AlertCircle, ArrowRight } from 'lucide-react'
+import { Sparkles, Dumbbell, CalendarCheck, Flame, ChevronRight, Plus, Trophy, AlertCircle, ArrowRight, XCircle, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/i18n'
 
@@ -37,6 +37,7 @@ type Session = {
   scheduledDate: string
   completed: boolean
   exercisesJson: unknown
+  notes?: string | null
 }
 
 type UserProfile = {
@@ -66,6 +67,8 @@ export function HomePage({ userName }: { userName: string }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [showProfileAlert, setShowProfileAlert] = useState(false)
   const [missingFields, setMissingFields] = useState<string[]>([])
+  const [isBoosting, setIsBoosting] = useState(false)
+  const [boosted, setBoosted] = useState(false)
   const [, startTransition] = useTransition()
 
   const firstName = userName?.split(' ')[0] ?? 'Athlete'
@@ -103,12 +106,25 @@ export function HomePage({ userName }: { userName: string }) {
   const todayStr = now.toISOString().split('T')[0]
 
   const todaySessions = sessions.filter(s => s.scheduledDate === todayStr)
+  const missedSessions = sessions.filter(s => s.scheduledDate < todayStr && !s.completed)
   const upcomingSessions = sessions
     .filter(s => s.scheduledDate > todayStr && !s.completed)
     .slice(0, 3)
+  const nextSessionIsBoosted = upcomingSessions[0] && (upcomingSessions[0] as Session & { notes?: string }).notes === '__boosted__'
   const completedCount = sessions.filter(s => s.completed).length
   const totalCount = sessions.length
   const streak = Math.floor(completedCount / Math.max(plan?.sessionsPerWeek ?? 3, 1))
+
+  const handleBoost = async () => {
+    if (!plan) return
+    setIsBoosting(true)
+    await boostMissedSessions(plan.id)
+    // Reload sessions after boost
+    const s = await getSessionsForPlan(plan.id)
+    setSessions(s as Session[])
+    setBoosted(true)
+    setIsBoosting(false)
+  }
 
   const tryOpenGenerator = () => {
     if (!isProfileComplete(userProfile)) {
@@ -277,6 +293,76 @@ export function HomePage({ userName }: { userName: string }) {
                 <span className="text-[11px] text-muted-foreground">{t.home.statSuccess}</span>
               </div>
             </div>
+
+            {/* Missed workouts banner + section */}
+            {missedSessions.length > 0 && !boosted && (
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">{t.home.missedSection}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{t.home.missedBanner}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleBoost}
+                    disabled={isBoosting}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-xs font-semibold text-red-400 hover:bg-red-500/30 transition-colors disabled:opacity-60"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    {isBoosting ? '...' : t.home.boosted}
+                  </button>
+                </div>
+
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-400 inline-block" />
+                  {t.home.missedSection}
+                </h3>
+                <div className="flex flex-col gap-2">
+                  {missedSessions.map(s => {
+                    const exs = (s.exercisesJson as Exercise[]) ?? []
+                    return (
+                      <div key={s.id} className="bg-red-500/5 border border-red-500/20 rounded-2xl overflow-hidden">
+                        <div className="px-4 py-3 border-b border-red-500/20 bg-red-500/5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold text-red-400">{t.home.missed}</span>
+                            <span className="text-xs text-muted-foreground">{t.home.exercises(exs.length)}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5 capitalize">
+                            {new Date(s.scheduledDate + 'T00:00:00').toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', { weekday: 'long', day: 'numeric', month: 'short' })}
+                          </p>
+                        </div>
+                        <div className="p-4 flex flex-col gap-2">
+                          {exs.slice(0, 2).map((ex, i) => (
+                            <ExerciseCard key={i} exercise={ex} index={i} />
+                          ))}
+                          {exs.length > 2 && (
+                            <p className="text-xs text-muted-foreground">+{exs.length - 2} more</p>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Boost confirmation */}
+            {boosted && (
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-primary/10 border border-primary/30">
+                <Zap className="w-4 h-4 text-primary flex-shrink-0" />
+                <p className="text-sm font-semibold text-foreground">{t.home.catchUpDone}</p>
+              </div>
+            )}
+
+            {/* Upcoming — show boosted badge on first upcoming if applicable */}
+            {!boosted && nextSessionIsBoosted && upcomingSessions.length > 0 && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/20">
+                <Zap className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <p className="text-xs font-semibold text-primary">{t.home.boosted}</p>
+              </div>
+            )}
 
             {/* Today */}
             {todaySessions.length > 0 && (

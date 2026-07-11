@@ -163,6 +163,9 @@ export function CalendarView({
                   const allDone = hasSession && daySessions.every(s => s.completed)
                   const someDone = hasSession && daySessions.some(s => s.completed)
                   const multi = daySessions.length > 1
+                  const isPast = ds < todayStr
+                  const allMissed = hasSession && isPast && daySessions.every(s => !s.completed)
+                  const someMissed = hasSession && isPast && daySessions.some(s => !s.completed) && !allDone
 
                   return (
                     <button
@@ -171,29 +174,33 @@ export function CalendarView({
                       className={`relative flex flex-col items-center justify-center h-10 rounded-xl transition-all text-sm font-medium
                         ${!isCurrentMonth ? 'opacity-30' : ''}
                         ${isToday ? 'bg-primary text-primary-foreground' : ''}
-                        ${hasSession && !isToday ? 'bg-secondary' : ''}
+                        ${hasSession && !isToday && allMissed ? 'bg-red-500/15' : ''}
+                        ${hasSession && !isToday && !allMissed ? 'bg-secondary' : ''}
                         ${!hasSession && !isToday ? 'hover:bg-secondary/60' : ''}
                         ${hasSession && !isToday ? 'hover:bg-secondary/80' : ''}
                       `}
                     >
-                      <span className={isToday ? 'text-primary-foreground' : isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}>
+                      <span className={isToday ? 'text-primary-foreground' : allMissed && isCurrentMonth ? 'text-red-400' : isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}>
                         {day.getDate()}
                       </span>
                       {/* Single dot or multi-dot indicators */}
                       {hasSession && !multi && (
                         <span
                           className={`absolute bottom-1 w-1.5 h-1.5 rounded-full
-                            ${allDone ? 'bg-green-400' : someDone ? 'bg-yellow-400' : isToday ? 'bg-primary-foreground' : 'bg-primary'}`}
+                            ${allDone ? 'bg-green-400' : allMissed ? 'bg-red-400' : someMissed ? 'bg-orange-400' : someDone ? 'bg-yellow-400' : isToday ? 'bg-primary-foreground' : 'bg-primary'}`}
                         />
                       )}
                       {multi && (
                         <span className="absolute bottom-1 flex gap-0.5">
-                          {daySessions.slice(0, 3).map((s, j) => (
-                            <span
-                              key={j}
-                              className={`w-1 h-1 rounded-full ${s.completed ? 'bg-green-400' : isToday ? 'bg-primary-foreground' : 'bg-primary'}`}
-                            />
-                          ))}
+                          {daySessions.slice(0, 3).map((s, j) => {
+                            const sessionMissed = isPast && !s.completed
+                            return (
+                              <span
+                                key={j}
+                                className={`w-1 h-1 rounded-full ${s.completed ? 'bg-green-400' : sessionMissed ? 'bg-red-400' : isToday ? 'bg-primary-foreground' : 'bg-primary'}`}
+                              />
+                            )
+                          })}
                         </span>
                       )}
                     </button>
@@ -211,6 +218,9 @@ export function CalendarView({
                 </span>
                 <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                   <span className="w-2 h-2 rounded-full bg-green-400" /> {cal.done}
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                  <span className="w-2 h-2 rounded-full bg-red-400" /> {cal.missed}
                 </span>
                 {plans.length > 1 && (
                   <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
@@ -234,16 +244,21 @@ export function CalendarView({
                   const exs = (s.exercisesJson as { name: string }[]) ?? []
                   const d = new Date(s.scheduledDate + 'T00:00:00')
                   const planTitle = planMap[s.planId]?.title
+                  const isMissed = !s.completed && s.scheduledDate < todayStr
                   return (
                     <button
                       key={s.id}
                       onClick={() => setSelectedSession(s)}
-                      className="bg-card border border-border rounded-2xl px-4 py-3.5 flex items-center gap-4 w-full text-left hover:border-primary/30 transition-colors"
+                      className={`border rounded-2xl px-4 py-3.5 flex items-center gap-4 w-full text-left transition-colors
+                        ${isMissed
+                          ? 'bg-red-500/5 border-red-500/30 hover:border-red-500/50'
+                          : 'bg-card border-border hover:border-primary/30'
+                        }`}
                     >
-                      <div className={`w-2 h-10 rounded-full flex-shrink-0 ${s.completed ? 'bg-green-400' : 'bg-primary'}`} />
+                      <div className={`w-2 h-10 rounded-full flex-shrink-0 ${s.completed ? 'bg-green-400' : isMissed ? 'bg-red-400' : 'bg-primary'}`} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-sm font-semibold text-foreground capitalize">
+                          <p className={`text-sm font-semibold capitalize ${isMissed ? 'text-red-400' : 'text-foreground'}`}>
                             {d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', { weekday: 'long', day: 'numeric', month: 'short' })}
                           </p>
                           {plans.length > 1 && planTitle && (
@@ -260,9 +275,11 @@ export function CalendarView({
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ${
                         s.completed
                           ? 'text-green-400 bg-green-400/10'
-                          : 'text-primary bg-primary/10'
+                          : isMissed
+                            ? 'text-red-400 bg-red-400/10'
+                            : 'text-primary bg-primary/10'
                       }`}>
-                        {s.completed ? cal.done : cal.planned}
+                        {s.completed ? cal.done : isMissed ? cal.missed : cal.planned}
                       </span>
                     </button>
                   )

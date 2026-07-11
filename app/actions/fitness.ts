@@ -3,7 +3,7 @@
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { profile, workoutPlan, workoutSession, progressLog } from '@/lib/db/schema'
-import { eq, and, desc } from 'drizzle-orm'
+import { eq, and, desc, gte, lt, gt } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 
@@ -712,4 +712,104 @@ export async function applyPlanDays(planId: string, days: WorkoutDay[]) {
 
   revalidatePath('/')
   revalidatePath('/calendar')
+}
+
+// ─── Overdue / Catch-up ───────────────────────────────────────────────────────
+
+/**
+ * Called when the user acknowledges missed workouts.
+ * 1. Marks all uncompleted sessions whose scheduledDate is strictly before today
+ *    as skipped (sets a note, but leaves completed=false so they stay red in history).
+ * 2. Boosts the next upcoming session's exercises by +20% sets/reps to help
+ *    the user catch up — capped so sets ≤ 6 and reps are bumped by one step.
+ */
+export async function boostMissedSessions(planId: string) {
+  const userId = await getUserId()
+  const today = toDateString(new Date())
+
+  // 1. Find all missed (past, uncompleted) sessions for this plan
+  const missed = await db
+    .select()
+    .from(workoutSession)
+    .where(
+      and(
+        eq(workoutSession.planId, planId),
+        eq(workoutSession.userId, userId),
+        eq(workoutSession.completed, false),
+        lt(workoutSession.scheduledDate, today),
+      ),
+    )
+
+  if (missed.length === 0) return { boosted: false }
+
+  // Mark them with a skipped note (does not flip completed so they stay red)
+  for (const s of missed) {
+    await db
+      .update(workoutSession)
+      .set({ notes: '__skipped__' })
+      .where(and(eq(workoutSession.id, s.id), eq(workoutSession.userId, userId)))
+  }
+
+  // 2. Find the very next upcoming session
+  const upcoming = await db
+    .select()
+    .from(workoutSession)
+    .where(
+      and(
+        eq(workoutSession.planId, planId),
+        eq(workoutSession.userId, userId),
+        eq(workoutSession.completed, false),
+        gte(workoutSession.scheduledDate, today),
+      ),
+    )
+    .orderBy(workoutSession.scheduledDate)
+    .limit(1)
+
+  if (upcoming.length === 0) return { boosted: false }
+
+  const next = upcoming[0]
+  const exercises = (next.exercisesJson as Exercise[]) ?? []
+
+  // Boost strength/cardio exercises: +1 set (max 6), bump reps string by ~20%
+  const boosted = exercises.map(ex => {
+    if (ex.phase === 'warmup' || ex.phase === 'cooldown') return ex
+    const newSets = Math.min((ex.sets ?? 3) + 1, 6)
+    const newReps = boostRepsString(ex.reps ?? '')
+    return { ...ex, sets: newSets, reps: newReps, _boosted: true }
+  })
+
+  await db
+    .update(workoutSession)
+    .set({
+      exercisesJson: boosted as unknown as Record<string, unknown>,
+      notes: '__boosted__',
+    })
+    .where(and(eq(workoutSession.id, next.id), eq(workoutSession.userId, userId)))
+
+  revalidatePath('/')
+  revalidatePath('/calendar')
+  return { boosted: true, sessionId: next.id }
+}
+
+/** Bumps a reps string like "8-10" → "10-12", "12-15" → "15-18", "30 sec" → "35 sec" */
+function boostRepsString(reps: string): string {
+  // "X-Y" range → add ~2 to each bound
+  const rangeMatch = reps.match(/^(\d+)-(\d+)(.*)$/)
+  if (rangeMatch) {
+    const lo = parseInt(rangeMatch[1]) + 2
+    const hi = parseInt(rangeMatch[2]) + 2
+    return `${lo}-${hi}${rangeMatch[3]}`
+  }
+  // "N sec" → add 10%
+  const secMatch = reps.match(/^(\d+)(\s*sec.*)$/i)
+  if (secMatch) {
+    const val = Math.round(parseInt(secMatch[1]) * 1.15)
+    return `${val}${secMatch[2]}`
+  }
+  // Plain number → add 2
+  const numMatch = reps.match(/^(\d+)(.*)$/)
+  if (numMatch) {
+    return `${parseInt(numMatch[1]) + 2}${numMatch[2]}`
+  }
+  return reps
 }
