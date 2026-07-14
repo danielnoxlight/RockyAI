@@ -73,6 +73,8 @@ export type GeneratePlanInput = {
   wishes: string
   /** Optional user-customized days from the constructor — used instead of auto-generation */
   customDays?: WorkoutDay[]
+  /** UI language — used to localise the plan title */
+  lang?: 'en' | 'ru'
 }
 
 export type Exercise = {
@@ -388,7 +390,8 @@ export async function generateWorkoutPlan(input: GeneratePlanInput) {
   const goalLabel = GOAL_LABELS[input.goal] ?? input.goal
   const muscles = input.targetMuscles.join(', ')
   const wishSuffix = input.wishes.trim() ? ` · ${input.wishes.trim().slice(0, 40)}` : ''
-  const title = `${goalLabel} Plan — ${muscles} (${input.durationWeeks} нед${wishSuffix})`
+  const wkLabel = input.lang === 'ru' ? 'нед' : 'wk'
+  const title = `${goalLabel} Plan — ${muscles} (${input.durationWeeks} ${wkLabel}${wishSuffix})`
 
   const planId = generateId()
   await db.insert(workoutPlan).values({

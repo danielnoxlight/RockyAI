@@ -257,6 +257,7 @@ export function GeneratePlanForm({ onClose, userProfile }: { onClose?: () => voi
     startDate,
     availableEquipment: equipment,
     trainingDays: weekdays,
+    lang,
     wishes: [
       wishes.trim(),
       customEquipment.trim() ? `${g.extraEquipment} ${customEquipment.trim()}` : '',
