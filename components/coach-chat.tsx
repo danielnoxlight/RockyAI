@@ -259,6 +259,16 @@ function ThreadSidebar({
 
 type PlanSummary = { id: string; title: string; goal: string }
 
+/** Replace the week abbreviation in a plan title so it matches the current UI language. */
+function localizeTitle(title: string, lang: string): string {
+  if (lang === 'ru') {
+    // EN → RU: "4 wk" or "4 wks" → "4 нед"
+    return title.replace(/(\d+)\s*wks?/gi, '$1 нед')
+  }
+  // RU → EN: "4 нед" → "4 wk"
+  return title.replace(/(\d+)\s*нед/g, '$1 wk')
+}
+
 export type CoachChatProps = {
   hasPlan: boolean
   initialActivePlanId: string | null
@@ -456,7 +466,7 @@ export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThrea
                     <Dumbbell className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{p.title}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{localizeTitle(p.title, lang)}</p>
                     <p className="text-xs text-muted-foreground capitalize">{p.goal.replace('_', ' ')}</p>
                   </div>
                   {activePlanId === p.id && <Check className="w-4 h-4 text-primary flex-shrink-0" />}
@@ -531,7 +541,7 @@ export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThrea
             >
               <ClipboardList className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="flex-1 text-left font-medium truncate">
-                {activePlan ? activePlan.title : co.pickPlan}
+                {activePlan ? localizeTitle(activePlan.title, lang) : co.pickPlan}
               </span>
               <ChevronDown className={`w-3 h-3 flex-shrink-0 transition-transform ${planPickerOpen ? 'rotate-180' : ''}`} />
             </button>
