@@ -501,7 +501,7 @@ export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThrea
           >
             <MessagesSquare className="w-3.5 h-3.5 text-primary flex-shrink-0" />
             <span className="flex-1 text-sm font-semibold text-foreground truncate">
-              {activeThread?.title ?? co.defaultTitle}
+              {activeThread ? localizeTitle(activeThread.title, lang) : co.defaultTitle}
             </span>
             {threads.length > 1 && (
               <span className="flex-shrink-0 text-[10px] font-bold text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 leading-none">
