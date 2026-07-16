@@ -19,9 +19,9 @@ export default async function CoachPage() {
   // Get or create the default thread
   let activeThread: typeof threads[number] | null = threads[0] ?? null
   if (!activeThread) {
-    const id = await createThread('Первый чат').catch(() => null)
+    const id = await createThread('New chat').catch(() => null)
     if (id) {
-      const newThread = { id, title: 'Первый чат', createdAt: new Date() }
+      const newThread = { id, title: 'New chat', createdAt: new Date() }
       threads.push(newThread)
       activeThread = newThread
     }

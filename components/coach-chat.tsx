@@ -115,11 +115,27 @@ function Bubble({ role, content }: { role: 'user' | 'assistant'; content: string
   )
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Normalise plan/chat titles so week abbreviations and default chat names match the UI language. */
+function localizeTitle(title: string, lang: string): string {
+  if (lang === 'ru') {
+    let out = title.replace(/(\d+)\s*wks?/gi, '$1 нед')
+    out = out.replace(/^New chat$/i, 'Новый чат')
+    return out
+  }
+  let out = title.replace(/(\d+)\s*нед/g, '$1 wk')
+  out = out.replace(/^Новый чат$/i, 'New chat')
+  out = out.replace(/^Первый чат$/i, 'New chat')
+  return out
+}
+
 // ─── Thread Sidebar ───────────────────────────────────────────────────────────
 
 function ThreadSidebar({
   threads,
   activeId,
+  lang,
   onSelect,
   onNew,
   onDelete,
@@ -128,6 +144,7 @@ function ThreadSidebar({
 }: {
   threads: ThreadSummary[]
   activeId: string
+  lang: string
   onSelect: (id: string) => void
   onNew: () => void
   onDelete: (id: string) => void
@@ -225,7 +242,7 @@ function ThreadSidebar({
                   autoFocus
                 />
               ) : (
-                <span className="flex-1 text-sm truncate">{t.title}</span>
+                <span className="flex-1 text-sm truncate">{localizeTitle(t.title, lang)}</span>
               )}
 
               {/* Action buttons — pencil + trash */}
@@ -258,16 +275,6 @@ function ThreadSidebar({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 type PlanSummary = { id: string; title: string; goal: string }
-
-/** Replace the week abbreviation in a plan title so it matches the current UI language. */
-function localizeTitle(title: string, lang: string): string {
-  if (lang === 'ru') {
-    // EN → RU: "4 wk" or "4 wks" → "4 нед"
-    return title.replace(/(\d+)\s*wks?/gi, '$1 нед')
-  }
-  // RU → EN: "4 нед" → "4 wk"
-  return title.replace(/(\d+)\s*нед/g, '$1 wk')
-}
 
 export type CoachChatProps = {
   hasPlan: boolean
@@ -362,7 +369,7 @@ export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThrea
 
   // Create new thread
   const handleNewThread = async () => {
-    const id = await createThread()
+    const id = await createThread(co.newChat)
     const newThread: ThreadSummary = { id, title: co.newChat, createdAt: new Date() }
     setThreads(prev => [newThread, ...prev])
     setSidebarOpen(false)
@@ -417,6 +424,7 @@ export function CoachChat({ hasPlan, initialActivePlanId, allPlans, initialThrea
         <ThreadSidebar
           threads={threads}
           activeId={activeThreadId}
+          lang={lang}
           onSelect={switchThread}
           onNew={handleNewThread}
           onDelete={handleDeleteThread}

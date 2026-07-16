@@ -67,7 +67,7 @@ export async function getThreads(): Promise<ThreadSummary[]> {
   return rows.map(r => ({ id: r.id, title: r.title, createdAt: r.createdAt }))
 }
 
-export async function createThread(title = 'Новый чат'): Promise<string> {
+export async function createThread(title = 'New chat'): Promise<string> {
   const userId = await getUserId()
   await ensureTables()
   const id = generateId()
@@ -146,7 +146,7 @@ export async function saveThreadMessages(
         .from(chatThread)
         .where(and(eq(chatThread.id, threadId), eq(chatThread.userId, userId)))
         .limit(1)
-      if (threads[0]?.title === 'Новый чат') {
+      if (threads[0]?.title === 'Новый чат' || threads[0]?.title === 'New chat') {
         const autoTitle = firstUserMsg.content.slice(0, 50).trim()
         if (autoTitle) {
           await db
