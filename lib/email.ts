@@ -18,7 +18,7 @@ export async function sendPasswordResetEmail({
   if (!resendApiKey) {
     // No API key yet (e.g. local/dev before final deploy).
     // Log the link so the flow is still testable without sending real email.
-    console.log('[v0] RESEND_API_KEY not set. Password reset link for', to, ':', url)
+    console.log('RESEND_API_KEY not set. Password reset link for', to, ':', url)
     return
   }
 
